@@ -1,0 +1,3 @@
+#!/bin/bash
+# Opens a new Ghostty window running the Claude project picker.
+open -na "/Applications/Ghostty.app" --args -e "$HOME/.local/bin/claude-project-launcher.sh"

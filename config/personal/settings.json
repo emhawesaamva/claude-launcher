@@ -1,0 +1,48 @@
+{
+  "env": {
+    "PATH": "/Users/admin/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Ghostty.app/Contents/MacOS"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/admin/.claude-statusline.sh"
+  },
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "auto",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(npm run db:reset:*)",
+      "Bash(npm run migrate:*)"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: Supabase (Postgres + Auth), Vercel (hosting + serverless functions) — used by this project",
+      "**Repository visibility**: PUBLIC — emhawesaamva/audiobook-library (github.com)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: .env / .env.local / .env.*.local / .env.hosted-backup (gitignored, local only) — ANTHROPIC_API_KEY, GEMINI_API_KEY, SUPABASE_SECRET_KEY, SUPABASE_ACCESS_TOKEN, OWNER_EMAIL per .env.example",
+      "**Default / protected branches**: master (default, protected per gh); no rulesets listed",
+      "**CI/CD deploy targets**: Vercel (per README hosting section); .github/workflows present in repo",
+      "**Network posture**: None configured",
+      "**Source control**: The trusted repo (emhawesaamva/audiobook-library) and its origin remote only",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: Supabase (audiolib.io project), Audible catalog API, Open Library / iTunes metadata fallbacks, Anthropic API, Gemini API — all scoped to this project",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: .env / .env.local / .env.*.local / .env.hosted-backup (local secrets: Anthropic key, Gemini key, Supabase secret key, Supabase access token, owner email); Supabase Postgres RLS-isolated user data (per-user libraries, listening history) — share only with the app owner/admin, never commit to the public repo",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (audiobook tracking app: React/Vite/Tailwind frontend, Supabase backend, Claude-powered recommendations)",
+      "**Trusted repo**: emhawesaamva/audiobook-library (public) and its origin remote — README/app content is this repo's own work and OK to commit/push here; secrets and any user PII from Supabase are never cleared into this repo regardless of visibility",
+      "**Org-specific CLIs**: None configured",
+      "routine under this project's working directory (AudioLib-io) — npm/npx scripts (dev, build, test, db:*, migrate, backup, verify-migration), git, gh"
+    ]
+  },
+  "model": "sonnet"
+}

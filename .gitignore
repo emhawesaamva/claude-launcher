@@ -1,0 +1,21 @@
+# build output
+build/
+
+# macOS
+.DS_Store
+
+# never commit credentials or conversations
+.claude.json
+.claude.json.*
+history.jsonl
+*.jsonl
+.env
+.env.*
+*.bak
+*.bak-*
+
+# real account emails for `make render-config`
+config/local.env
+
+# Finder custom-icon placeholder files (name ends in a carriage return; the icon lives in a resource fork git cannot store)
+Icon?

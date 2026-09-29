@@ -1,0 +1,53 @@
+# Start new terminal sessions in Documents/Projects
+[[ -d "$HOME/Documents/Projects" ]] && cd "$HOME/Documents/Projects"
+
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+export PATH="/opt/homebrew/opt/python@3.13/libexec/bin:$PATH"
+
+# Case-insensitive tab-completion for file/folder names
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Multi-account Claude Code (separate config/credential dirs).
+# --allow-dangerously-skip-permissions makes bypass mode available in the
+# Shift+Tab cycle (inactive by default).
+alias claude-work='CLAUDE_CONFIG_DIR="$HOME/.claude-work" command claude --allow-dangerously-skip-permissions'
+alias claude-personal='CLAUDE_CONFIG_DIR="$HOME/.claude-personal" command claude --allow-dangerously-skip-permissions'
+
+# Plain `claude` never falls back to the legacy ~/.claude profile. It uses
+# CLAUDE_CONFIG_DIR if already set, else the nearest .work/.personal project
+# marker (same tags the Claude Launcher uses), else asks.
+unalias claude 2>/dev/null  # old alias would break this definition on re-source
+claude() {
+    local dir="$CLAUDE_CONFIG_DIR" d="$PWD" w p ans
+    if [[ -z "$dir" ]]; then
+        while [[ "$d" != "/" && "$d" != "$HOME" ]]; do
+            [[ -e "$d/.work" ]] && w=1
+            [[ -e "$d/.personal" ]] && p=1
+            [[ -n "$w$p" ]] && break
+            d="${d:h}"
+        done
+        if [[ -n "$w" && -z "$p" ]]; then
+            dir="$HOME/.claude-work"
+        elif [[ -n "$p" && -z "$w" ]]; then
+            dir="$HOME/.claude-personal"
+        elif [[ -t 0 ]]; then
+            read -k1 "ans?Claude profile — [w]ork / [p]ersonal? "
+            echo
+            case "$ans" in
+                [wW]) dir="$HOME/.claude-work" ;;
+                [pP]) dir="$HOME/.claude-personal" ;;
+                *) echo "cancelled" >&2; return 1 ;;
+            esac
+        else
+            echo "claude: no profile — use claude-work / claude-personal or set CLAUDE_CONFIG_DIR" >&2
+            return 1
+        fi
+        echo "→ claude (${${dir:t}#.claude-})" >&2
+    fi
+    CLAUDE_CONFIG_DIR="$dir" command claude --allow-dangerously-skip-permissions "$@"
+}
