@@ -54,8 +54,8 @@ echo
 echo
 
 FZF_OPTS=(
-    --height=~40% --layout=reverse --border=rounded --header-first
-    --color=fg:245,fg+:255,bg+:236,hl:209,hl+:209,border:209,header:209,prompt:209,pointer:209,info:238
+    --height=~40% --layout=reverse --border=none --header-first
+    --color=fg:245,fg+:255,bg+:236,hl:209,hl+:209,header:209,prompt:209,pointer:209,info:238
     --prompt="❯ "
 )
 
@@ -74,7 +74,7 @@ ROOT_LABEL="Projects"
 # actually been since the project was touched by hand.
 PRUNE_NAMES=( node_modules .git .next .nuxt dist build out target
               .venv venv __pycache__ .pytest_cache .cache .DS_Store
-              .work .personal )
+              .work .personal .bypass )
 
 # Newest file mtime found anywhere in the project, so editing a deeply nested
 # file floats it to the top of the list. Only files count: macOS rewrites
@@ -162,7 +162,16 @@ if ! command -v claude >/dev/null 2>&1; then
     exec "$SHELL"
 fi
 
-claude --allow-dangerously-skip-permissions
+# A project holding an empty .bypass file starts in bypassPermissions mode.
+# This has to come from the command line: Claude Code ignores defaultMode
+# "bypassPermissions" in project settings files (v2.1.257+), so a settings
+# entry cannot do it. Everything else starts in the normal mode.
+permission_args=(--allow-dangerously-skip-permissions)
+if [ -e "$target_dir/.bypass" ]; then
+    permission_args+=(--permission-mode bypassPermissions)
+fi
+
+claude "${permission_args[@]}"
 echo
 echo "(claude exited — press ctrl-d or type 'exit' to close this window)"
 exec "$SHELL"
