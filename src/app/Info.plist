@@ -12,6 +12,8 @@
   <string>1.0</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
+  <key>NSAppleEventsUsageDescription</key>
+  <string>Claude Launcher opens the project picker in a Ghostty tab.</string>
   <key>LSUIElement</key>
   <false/>
 </dict>
